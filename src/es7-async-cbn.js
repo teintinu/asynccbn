@@ -40,7 +40,7 @@ function transform_ast(inputFileName, source_ast) {
                 node.async = false;
                 node.params.push(b.identifier('callback'));
 
-                node.body.body = visitEachRowFunction(node, node.body.body);
+                node.body.body = visitEachRowFunction(node.body.body);
 
                 functionPath.replace(node);
             }
@@ -49,14 +49,14 @@ function transform_ast(inputFileName, source_ast) {
     });
     return source_ast;
 
-    function visitEachRowFunction(fnNode, fnbody) {
-        var curr_function = fnNode;
+    function visitEachRowFunction(fnbody) {
         var retBody = [];
         for (var i = 0; i < fnbody.length; i++) {
             var stmt = fnbody[i];
 
-            var has_await = false;
-            recast.visit(stmt, {
+            var has_await = false,
+                callback, callback_body;
+            stmt = recast.visit(stmt, {
                 visitReturnStatement: function (returnPath) {
                     returnPath.replace(b.expressionStatement(b.callExpression(b.identifier('callback'), [b.identifier('null'), returnPath.node.argument
                    ])));
@@ -67,19 +67,24 @@ function transform_ast(inputFileName, source_ast) {
                     var invoke = awaitPath.node.argument;
                     awaitPath.replace(b.identifier('$res'));
 
-                    var callback_body = [b.ifStatement(b.identifier('$err'), //
-                            b.returnStatement(b.callExpression(b.identifier('callback'), [b.identifier('$err')]))), //
-                                         stmt];
+                    callback_body = [b.ifStatement(b.identifier('$err'), //
+                        b.expressionStatement(b.callExpression(b.identifier('callback'), [b.identifier('$err')])), //
+                        b.blockStatement([]))];
 
-                    var callback = b.functionExpression(null, [b.identifier('$err'), b.identifier('$res')], b.blockStatement(callback_body));
+                    callback = b.functionExpression(null, [b.identifier('$err'), b.identifier('$res')], b.blockStatement(callback_body));
                     invoke.arguments.push(callback);
 
                     retBody.push(b.expressionStatement(invoke));
 
                     this.traverse(awaitPath);
+
                 }
             });
-            if (!has_await)
+            if (has_await) {
+                var afterRows = visitEachRowFunction(fnbody.splice(i + 1));
+                callback_body[0].alternate.body.push(stmt);
+                callback_body[0].alternate.body = callback_body[0].alternate.body.concat(afterRows);
+            } else
                 retBody.push(stmt);
         }
         return retBody;
