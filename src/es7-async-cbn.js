@@ -40,7 +40,7 @@ function transform_ast(inputFileName, source_ast) {
                 node.async = false;
                 node.params.push(b.identifier('callback'));
 
-                node.body.body = visitEachRowFunction(node.body.body);
+                node.body.body = visitEachRowFunction(node.body.body, 1);
 
                 functionPath.replace(node);
             }
@@ -49,7 +49,11 @@ function transform_ast(inputFileName, source_ast) {
     });
     return source_ast;
 
-    function visitEachRowFunction(fnbody) {
+    function visitEachRowFunction(fnbody, res_id) {
+
+        var $err = b.identifier('$err' + res_id);
+        var $res = b.identifier('$res' + res_id);
+
         var retBody = [];
         for (var i = 0; i < fnbody.length; i++) {
             var stmt = fnbody[i];
@@ -65,13 +69,13 @@ function transform_ast(inputFileName, source_ast) {
                 visitAwaitExpression: function (awaitPath) {
                     has_await = true;
                     var invoke = awaitPath.node.argument;
-                    awaitPath.replace(b.identifier('$res'));
+                    awaitPath.replace($res);
 
-                    callback_body = [b.ifStatement(b.identifier('$err'), //
-                        b.expressionStatement(b.callExpression(b.identifier('callback'), [b.identifier('$err')])), //
+                    callback_body = [b.ifStatement($err, //
+                        b.expressionStatement(b.callExpression(b.identifier('callback'), [$err])), //
                         b.blockStatement([]))];
 
-                    callback = b.functionExpression(null, [b.identifier('$err'), b.identifier('$res')], b.blockStatement(callback_body));
+                    callback = b.functionExpression(null, [$err, $res], b.blockStatement(callback_body));
                     invoke.arguments.push(callback);
 
                     retBody.push(b.expressionStatement(invoke));
@@ -81,7 +85,7 @@ function transform_ast(inputFileName, source_ast) {
                 }
             });
             if (has_await) {
-                var afterRows = visitEachRowFunction(fnbody.splice(i + 1));
+                var afterRows = visitEachRowFunction(fnbody.splice(i + 1), res_id + 1);
                 callback_body[0].alternate.body.push(stmt);
                 callback_body[0].alternate.body = callback_body[0].alternate.body.concat(afterRows);
             } else
