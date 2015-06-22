@@ -57,11 +57,11 @@ function transform_ast(inputFileName, source_ast) {
 
             var has_await = false;
             recast.visit(stmt, {
-                //                    visitReturnStatement: function (returnPath) {
-                //                        returnPath.replace(b.expressionStatement(b.callExpression(b.identifier('callback'), [b.identifier('null'), returnPath.node.argument
-                //])));
-                //                        this.traverse(returnPath);
-                //                    },
+                visitReturnStatement: function (returnPath) {
+                    returnPath.replace(b.expressionStatement(b.callExpression(b.identifier('callback'), [b.identifier('null'), returnPath.node.argument
+                   ])));
+                    this.traverse(returnPath);
+                },
                 visitAwaitExpression: function (awaitPath) {
                     has_await = true;
                     var invoke = awaitPath.node.argument;
