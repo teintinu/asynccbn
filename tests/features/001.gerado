@@ -1,0 +1,10 @@
+var double = require('./sample').double;
+
+function sample001(callback) {
+  double(5, function($err, $res) {
+    if ($err)
+      return callback($err);
+
+    return $res;
+  });
+}
