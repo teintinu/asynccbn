@@ -13,38 +13,41 @@ module.exports = (function () {
 
     var dictionary = new Dictionary()
         .define('CASE', /(.*)/)
-        .define('CODE', /([^\0000]*)/);
+        .define('RESULT', /(\d*)/)
+        .define('CODE', /([^\u0000]*)/);
     var library = English.library(dictionary)
 
-    .given("I need to transpile $CASE", function (s, next) {
+    .given("I need to transpile $CASE", function (s) {
         case_description = s;
     })
 
-    .when("EcmaScript6=$CODE", function (code, next) {
+    .when("EcmaScript6=$CODE", function (code) {
         es6_code = code;
     })
 
-    .then("EcmaScript5=$CODE", function (expected_es5_code, next) {
+    .then("EcmaScript5=$CODE", function (es5_code) {
 
-        var actual_es5_code;
+        var actual_es5_code, expected_es5_code;
 
         try {
-            var result = babel.transform(es6_code, {
+            actual_es5_code = babel.transform(es6_code, {
                 filename: case_description,
                 compact: false,
-                //features: { "es7.asyncFunctions": true },
-                //experimental: true,
-                //stage: 1,
                 optional: ["es7.asyncFunctions"],
                 plugins: ["../src/babel-plugin-async2cbn:before"]
-            });
+            }).code.replace(/^"use strict";\s*/, '');
+            expected_es5_code = babel.transform(es5_code, {
+                filename: case_description,
+                compact: false,
+                optional: [],
+                plugins: []
+            }).code.replace(/^"use strict";\s*/, '');
         } catch (e) {
             debugger;
             throw e;
         }
-        actual_es5_code = result.code.replace(/^"use strict";\s*/, '');
 
-        if (expected_es5_code.trim() != actual_es5_code.trim())
+        if (expected_es5_code != actual_es5_code)
             throw new Error(
                        ["transpile fail on " + case_description,
                        "expected:",
@@ -52,7 +55,9 @@ module.exports = (function () {
                        "actual",
                        actual_es5_code].join('\n'));
 
-    });
+    })
+
+    .then("eval fn equals to $RESULT", function (result) {});
 
     return library;
 })();

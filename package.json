@@ -1,37 +1,37 @@
 {
-  "name": "es7-async-cbn",
-  "description": "ES7 Async to callback (node style)",
-  "version": "0.0.1",
-  "main": "src/es7-async-cbn.js",
-  "scripts": {
-    "preinstall": "npm --loglevel error link yadda",
-    "test": "node bin/example.js"
-  },
-  "directories": {
-    "test": "tests"
-  },
-  "author": "thr0w",
-  "license": "Apache2",
-  "dependencies": {
-    "babel-core": "^5.6.0"
-  },
-  "devDependencies": {
-    "babel": "^5.6.14",
-    "mocha": "^2.2.5",
-    "yadda": "0.12.1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/thr0w/es7-async-cbn.git"
-  },
-  "keywords": [
+    "name": "asynccbn",
+    "description": "ES7 Async to callback (node style)",
+    "version": "0.0.1",
+    "main": "src/es7-async-cbn.js",
+    "scripts": {
+        "preinstall": "npm --loglevel error link yadda",
+        "test": "node node_modules/mocha/bin/_mocha --reporter dot"
+    },
+    "directories": {
+        "test": "tests"
+    },
+    "author": "thr0w",
+    "license": "Apache2",
+    "dependencies": {
+        "babel-core": "^5.6.0"
+    },
+    "devDependencies": {
+        "babel": "^5.6.14",
+        "mocha": "^2.2.5",
+        "yadda": "0.12.1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/thr0w/asynccbn.git"
+    },
+    "keywords": [
     "ES7",
     "async",
     "await",
     "callback"
   ],
-  "bugs": {
-    "url": "https://github.com/thr0w/es7-async-cbn/issues"
-  },
-  "homepage": "https://github.com/thr0w/es7-async-cbn"
+    "bugs": {
+        "url": "https://github.com/thr0w/asynccbn/issues"
+    },
+    "homepage": "https://github.com/thr0w/asynccbn"
 }
