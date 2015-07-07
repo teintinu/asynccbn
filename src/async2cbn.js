@@ -1,15 +1,15 @@
-function visitorFunctionDeclaration(node, awaits, throwWithNode) {
+function visitorFunctionDeclaration(node, types, awaits, throwWithNode) {
     if (node.async) {
         node.async = false;
         node.params.push({
             type: 'Identifier',
             name: 'callback'
         });
-        node.body.body = visitEachRowFunction(node.body.body, awaits, throwWithNode);
+        node.body.body = visitEachRowFunction(node.body.body, types, awaits, throwWithNode);
     }
 }
 
-function visitEachRowFunction(fnbody, awaits, throwWithNode) {
+function visitEachRowFunction(fnbody, types, awaits, throwWithNode) {
 
     var gen = 0,
         has_catch = false,
@@ -58,17 +58,21 @@ function visitEachRowFunction(fnbody, awaits, throwWithNode) {
     }
 
     function visitStatement(stmt) {
-        var await_nodes;
-        awaits.some(function (nodes) {
-            return nodes.some(function (node) {
-                if (node == stmt) {
-                    await_nodes = nodes;
+        var await_info;
+        awaits.some(function (paths, idx) {
+            return paths.some(function (path) {
+                if (path.node == stmt) {
+                    await_info = {
+                        paths: paths,
+                        stmt: path,
+                        idx: idx
+                    };
                     return true;
                 }
             })
         });
-        if (await_nodes)
-            return visitStatementWithAwait(stmt, await_nodes);
+        if (await_info)
+            return visitStatementWithAwait(stmt, await_info);
         else
             return visitStatementWithoutAwait(stmt);
     }
@@ -130,15 +134,16 @@ function visitEachRowFunction(fnbody, awaits, throwWithNode) {
         };
     }
 
-    function visitStatementWithAwait(stmt, nodes) {
-        var awaitNode = nodes.length ? nodes[0] : {};
-        var parentNode = nodes.length >= 2 ? nodes[1] : {};
+    function visitStatementWithAwait(stmt, await_info) {
+        var paths = await_info.paths;
+        var awaitPath = paths.length ? paths[0] : {};
+        var parentPath = paths.length >= 2 ? paths[1] : {};
 
-        if (awaitNode.type != 'AwaitExpression')
-            throwWithNode(awaitNode, "AwaitExpression can\'t be transpiled");
-        var call = awaitNode.argument;
+        if (awaitPath.node.type != 'AwaitExpression')
+            throwWithNode(awaitPath.node, "AwaitExpression can\'t be transpiled");
+        var call = awaitPath.node.argument;
 
-        switch (parentNode.type) {
+        switch (parentPath.node.type) {
         case 'ReturnStatement':
             call.arguments.push({
                 type: 'Identifier',
@@ -153,21 +158,12 @@ function visitEachRowFunction(fnbody, awaits, throwWithNode) {
                 ret_or_throw: true
             };
 
-        case 'ThrowStatement':
-            throwWithNode(awaitNode, "Can't throw await expression");
-
-        case 'IfStatement':
-        case 'WhileStatement':
-        case 'ForStatement':
-        case 'TryStatement':
-        case 'SwitchStatement':
-            throw "TODO";
-        default:
-            var cb = createCallback(awaitNode)
+        case "ExpressionStatement":
+            var cb = createCallback(awaitPath.node)
 
             call.arguments.push(cb.fn);
 
-            parentNode.argument = call;
+            parentPath.node.argument = call;
 
             return {
                 stmt: {
@@ -177,6 +173,35 @@ function visitEachRowFunction(fnbody, awaits, throwWithNode) {
                 afterAwait: cb.body,
                 ret_or_throw: false
             };
+
+        case 'ThrowStatement':
+            throwWithNode(awaitPath.node, "Can't throw await expression");
+
+        case 'IfStatement':
+        case 'WhileStatement':
+        case 'ForStatement':
+        case 'TryStatement':
+        case 'SwitchStatement':
+            throw "TODO";
+        case "BinaryExpression":
+        case "UnaryExpression":
+        case "CallExpression":
+            var cb = createCallback(awaitPath.node)
+            call.arguments.push(cb.fn);
+            awaitPath.replaceInline(cb.res$);
+            awaits.splice(await_info.idx, 1);
+            var r = visitStatement(await_info.stmt.node);
+            cb.body.push(r.stmt);
+            return {
+                stmt: {
+                    type: 'ExpressionStatement',
+                    expression: call
+                },
+                afterAwait: r.afterAwait || cb.body,
+                ret_or_throw: r.ret_or_throw
+            };
+        default:
+            throwWithNode(awaitPath.node, "Unsuported combination with await");
         };
 
     }

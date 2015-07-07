@@ -36,6 +36,12 @@ module.exports = (function () {
                 optional: ["es7.asyncFunctions"],
                 plugins: ["../src/babel-plugin-async2cbn:before"]
             }).code.replace(/^"use strict";\s*/, '');
+        } catch (e) {
+            debugger;
+            console.error(es6_code);
+            throw e;
+        }
+        try {
             expected_es5_code = babel.transform(es5_code, {
                 filename: case_description,
                 compact: true,
@@ -44,6 +50,7 @@ module.exports = (function () {
             }).code.replace(/^"use strict";\s*/, '');
         } catch (e) {
             debugger;
+            console.error(es5_code);
             throw e;
         }
 

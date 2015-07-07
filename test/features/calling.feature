@@ -1,6 +1,6 @@
 Feature: call async functions using await
 
-Scenario: Declaring [case]
+Scenario: Calling [case]
 
    Given I need to transpile [case]
     When EcmaScript6=[EcmaScript6]
@@ -19,7 +19,7 @@ Examples:
 
   call 2 times     ┆ -      ┆ async function fn() {                   ┆ function fn(callback) {
                    ┆        ┆    await divide(2,2);                   ┆   divide(2, 2, function(err$1, res$1) {
-                   ┆        ┆    await divide(2,2);                   ┆     if(err$1) return callback(err$1);
+                   ┆        ┆    await divide(2,2);                   ┆     if (err$1) return callback(err$1);
                    ┆        ┆ }                                       ┆     divide(2, 2, function(err$2, res$2) {
                    ┆        ┆                                         ┆       callback(err$2);
                    ┆        ┆                                         ┆     });
@@ -30,16 +30,16 @@ Examples:
                    ┆         ┆   return await divide(2,2);             ┆   divide(2, 2, callback);
                    ┆         ┆ }                                       ┆ }
 
+  return expression┆   11    ┆ async function fn() {                   ┆ function fn(callback) {
+    with await     ┆         ┆   return await divide(2,2) + 10;        ┆   divide(2, 2, function(err$1, res$1) {
+                   ┆         ┆ }                                       ┆     if(err$1)
+                   ┆         ┆                                         ┆       return callback(err$1);
+                   ┆         ┆                                         ┆     callback(null, res$1 + 10);
+                   ┆         ┆                                         ┆   })
+                   ┆         ┆                                         ┆ }
+
 ###
 
-
-  return expression┆   11    ┆ async function fn() {                   ┆ function fn(callback) {
-    with await     ┆         ┆   return await divide(2,2) + 10;        ┆   return divide(2, 2, function(err, res$1) {
-                   ┆         ┆ }                                       ┆     if(err)
-                   ┆         ┆                                         ┆       return callback(err);
-                   ┆         ┆                                         ┆     return callback(null, res$1 + 10);
-                   ┆         ┆                                         ┆   }
-                   ┆         ┆                                         ┆ }
 
   var + return     ┆    2    ┆ async function fn() {                   ┆ function fn(callback) {
                    ┆         ┆   var res = await divide(4,2);          ┆   return divide(4, 2, function(err, res) {
