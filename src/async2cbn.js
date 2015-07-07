@@ -1,15 +1,26 @@
- function visitorFunctionDeclaration(node, throwWithNode) {
+
+function visitorFunctionDeclaration(node, throwWithNode) {
      if (node.async) {
          node.async = false;
-         if (!node.id.name)
-             throwWithNode("async functions must have a name");
-         node.id.name+="Async";
          node.params.push({type: 'Identifier', name: 'callback'});
          node.body.body = visitEachRowFunction(node.body.body, 1, throwWithNode).stmts;
      }
  }
 
- function visitorAwaitExpression(node, parent) {
+ function visitorAwaitExpression(node, parents, throwWithNode) {
+     if (!parents.length)
+         throwWithNode('await need to be in an async function');
+     var fn=parents[parents.length-1];
+     if (['FunctionDeclaration', 'FunctionExpression'].indexOf(fn.type)==-1)
+         throwWithNode('await need to be in an async function');
+     if (!fn.async || !fn.params.length || fn.params[fn.params.length-1].name!='callback')
+         throwWithNode('await need to be in an async function');
+     debugger;
+     var stmt=parents.some(function(p){
+         if (p.isStatement())
+             return p;
+     });
+
      //    has_await = true;
      //    var invoke = awaitPath.node.argument;
      //    awaitPath.replace($res);
@@ -36,8 +47,6 @@
 
 
  function visitEachRowFunction(fnbody, res_id, throwWithNode) {
-
-     debugger;
 
      var ret_or_throw = false;
 

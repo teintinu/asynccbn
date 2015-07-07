@@ -1,14 +1,9 @@
-/** double a number asynchronously (nodejs way)
- * @Param x: number
- * @Result double of x
- * @Throws error if x < 0
- */
-function double(x, callback) {
+function divide(a, b, callback) {
     setTimeout(function () {
-        if (x < 0)
-            callback("X must be positive");
-        callback(null, x * x);
+        if (b == 0)
+            callback("Can't divide " + a + " by zero");
+        callback(null, a / b);
     }, 0);
 }
 
-module.exports[double] = double;
+module.exports.divide = divide;

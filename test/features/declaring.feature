@@ -1,3 +1,5 @@
+Feature: declaring async functions
+
 Scenario: Declaring [case]
 
     Given I need to transpile [case]
@@ -7,18 +9,18 @@ Scenario: Declaring [case]
 Examples:
   case             ┆ EcmaScript6                              ┆ EcmaScript5
 
-  async function   ┆ async function divide(a,b)               ┆ function divideAsync(a, b, callback) {
+  async function   ┆ async function divide(a,b)               ┆ function divide(a, b, callback) {
                    ┆ {                                        ┆   return callback(null, a / b);
                    ┆   return a/b;                            ┆ }
                    ┆ }                                        ┆
 
-  async void       ┆ async function log(m)                    ┆ function logAsync(m, callback) {
+  async void       ┆ async function log(m)                    ┆ function log(m, callback) {
     function       ┆ {                                        ┆   console.log(m);
                    ┆   console.log(m);                        ┆   return callback();
                    ┆ }                                        ┆ }
 
 
-  async function   ┆ async function divide(a,b)               ┆ function divideAsync(a, b, callback) {
+  async function   ┆ async function divide(a,b)               ┆ function divide(a, b, callback) {
     with throw     ┆ {                                        ┆   return callback("division by zero");
                    ┆   throw "division by zero";              ┆ }
                    ┆ }                                        ┆
@@ -26,7 +28,7 @@ Examples:
 
 ###
 
-  async function   ┆ async function divide(a,b)               ┆ function divideAsync(a, b, callback) {
+  async function   ┆ async function divide(a,b)               ┆ function divide(a, b, callback) {
     with if        ┆ {                                        ┆   if (b<0)
                    ┆   if (b<0)                               ┆     return callback("division by zero");
                    ┆     throw "division by zero";            ┆   callback(null, a/b);
