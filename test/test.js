@@ -2,12 +2,10 @@
 /* global featureFile, scenarios, steps */
 "use strict";
 
-debugger;
-
 var Yadda = require('yadda');
 Yadda.plugins.mocha.StepLevelPlugin.init();
 
-new Yadda.FeatureFileSearch('features').each(function(file) {
+new Yadda.FeatureFileSearch(__dirname + '/features').each(function(file) {
     featureFile(file, function(feature) {
 
         var library = require('./library');
