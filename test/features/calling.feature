@@ -38,11 +38,19 @@ Examples:
                    ┆         ┆                                         ┆   })
                    ┆         ┆                                         ┆ }
 
-  return unary     ┆   11    ┆ async function fn() {                    ┆ function fn(callback) {
+  return unary     ┆   11    ┆ async function fn() {                   ┆ function fn(callback) {
     expression     ┆         ┆   return !await divide(2,2);            ┆   divide(2, 2, function(err$1, res$1) {
     with await     ┆         ┆ }                                       ┆     if(err$1)
                    ┆         ┆                                         ┆       return callback(err$1);
                    ┆         ┆                                         ┆     callback(null, !res$1);
+                   ┆         ┆                                         ┆   })
+                   ┆         ┆                                         ┆ }
+
+  return unary     ┆   11    ┆ async function fn() {                   ┆ function fn(callback) {
+    expression     ┆         ┆   return Math.round(await divide(2,2)); ┆   divide(2, 2, function(err$1, res$1) {
+    with await     ┆         ┆ }                                       ┆     if(err$1)
+                   ┆         ┆                                         ┆       return callback(err$1);
+                   ┆         ┆                                         ┆     callback(null, Math.round(res$1));
                    ┆         ┆                                         ┆   })
                    ┆         ┆                                         ┆ }
 
