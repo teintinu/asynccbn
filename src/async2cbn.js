@@ -142,6 +142,8 @@ function visitEachRowFunction(fnbody, types, awaits, throwWithNode) {
         if (awaitPath.node.type != 'AwaitExpression')
             throwWithNode(awaitPath.node, "AwaitExpression can\'t be transpiled");
         var call = awaitPath.node.argument;
+        if (call.type != 'CallExpression')
+            throwWithNode(awaitPath.node, "AwaitExpression must invoke a funciton");
 
         switch (parentPath.node.type) {
         case 'ReturnStatement':
