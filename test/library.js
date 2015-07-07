@@ -32,13 +32,13 @@ module.exports = (function () {
         try {
             actual_es5_code = babel.transform(es6_code, {
                 filename: case_description,
-                compact: false,
+                compact: true,
                 optional: ["es7.asyncFunctions"],
                 plugins: ["../src/babel-plugin-async2cbn:before"]
             }).code.replace(/^"use strict";\s*/, '');
             expected_es5_code = babel.transform(es5_code, {
                 filename: case_description,
-                compact: false,
+                compact: true,
                 optional: [],
                 plugins: []
             }).code.replace(/^"use strict";\s*/, '');
