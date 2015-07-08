@@ -13,7 +13,11 @@ function visitEachRowFunction(fnbody, types, awaits, throwWithNode) {
 
     var gen = 0,
         has_catch = false,
-        has_finally = false;
+        has_finally = false,
+        err$ = {
+            type: 'Identifier',
+            name: 'err$'
+        };
 
     var r = visitBlockStatement(fnbody);
     if (!r.ret_or_throw) {
@@ -25,6 +29,16 @@ function visitEachRowFunction(fnbody, types, awaits, throwWithNode) {
         } else
             r.stmtsBeforeAwait.push(transpileReturnStatement());
         r.ret_or_throw = true;
+    } else if (r.stmtsAfterAwait && r.stmtsAfterAwait.length == 2) {
+        var last = r.stmtsAfterAwait[r.stmtsAfterAwait.length - 1];
+        var expr = last.expression;
+        if (last.type == 'ExpressionStatement' && expr.type == 'CallExpression' && expr.callee.name == 'callback' && ['Identifier', 'Literal'].indexOf(expr.arguments[1].type) >= 0) {
+            r.stmtsAfterAwait.splice(0, 2, transpileReturnStatement({
+                loc: last.loc,
+                range: last.range,
+                argument: expr.arguments[1]
+            }, err$));
+        }
     }
     return r.stmtsBeforeAwait;
 
@@ -179,6 +193,23 @@ function visitEachRowFunction(fnbody, types, awaits, throwWithNode) {
         case 'ThrowStatement':
             throwWithNode(awaitPath.node, "Can't throw await expression");
 
+        case 'VariableDeclarator':
+            var cb = createCallback(awaitPath.node, parentPath.node.id);
+            var varDeclaration = paths[2];
+            if (varDeclaration.node.declarations.length > 1) {
+                parentPath.dangerouslyRemove();
+                cb.body.push(varDeclaration.node);
+            }
+            call.arguments.push(cb.fn);
+            return {
+                stmt: {
+                    type: 'ExpressionStatement',
+                    expression: call
+                },
+                afterAwait: cb.body,
+                ret_or_throw: false
+            };
+
         case 'IfStatement':
         case 'WhileStatement':
         case 'ForStatement':
@@ -257,13 +288,9 @@ function visitEachRowFunction(fnbody, types, awaits, throwWithNode) {
         };
     }
 
-    function createCallback(ref) {
+    function createCallback(ref, res) {
         var id = ++gen;
-        var err$ = {
-            type: "Identifier",
-            name: "err$" + id
-        };
-        var res$ = {
+        var res$ = res || {
             type: "Identifier",
             name: "res$" + id
         };
