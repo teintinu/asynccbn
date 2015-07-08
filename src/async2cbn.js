@@ -115,18 +115,15 @@ function visitEachRowFunction(fnbody, types, awaits, throwWithNode) {
                 stmt.consequent = consequent.stmt;
             }
             if (stmt.alternative)
-                throw "TODO";
+                if (stmt.alternative.type == "BlockStatement") {
+                    alternative = visitBlockStatement(stmt.alternative.body)
+                    stmt.alternative.body = consequent.stmtsBeforeAwait;
+                } else {
+                    alternative = visitStatement(stmt.alternative)
+                    stmt.alternative = consequent.stmt;
+                }
             if (consequent.stmtsAfterAwait || alternative && alternative.stmtsAfterAwait)
                 throw "TODO";
-            //{
-            //                if (stmt.alternative.type == "BlockStatement") {
-            //                    alternative = visitBlockStatement(stmt.alternative.body)
-            //                    stmt.alternative.body = consequent.stmtsBeforeAwait;
-            //                } else {
-            //                    alternative = visitStatement(stmt.alternative)
-            //                    stmt.alternative = consequent.stmt;
-            //                }
-            //            }
 
             var ifRet = {
                 stmt: stmt,

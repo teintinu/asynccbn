@@ -2,14 +2,16 @@ Feature: declaring async functions
 
 Scenario: Declaring [case]
 
-    Given I need to transpile [case]
-    When EcmaScript6=[EcmaScript6]
-    Then EcmaScript5=[EcmaScript5]
+   Given I need to transpile [case]
+    When EcmaScript6 at [EcmaScript6.start.line]:[EcmaScript6.start.column] = [EcmaScript6] 
+    Then EcmaScript5 at [EcmaScript5.start.line]:[EcmaScript5.start.column] = [EcmaScript5] 
+#     And eval fn equals to [result]
 
 Examples:
-  case             ┆ EcmaScript6                              ┆ EcmaScript5
+  case:ID          ┆ EcmaScript6:LOC                          ┆ EcmaScript5:LOC
 
-  async function   ┆ async function divide(a,b)               ┆ function divide(a, b, callback) {
+@only
+  async function   ┆ async function divide(a,b)              ┆ function divide(a, b, callback) {
                    ┆ {                                        ┆   callback(null, a / b);
                    ┆   return a/b;                            ┆ }
                    ┆ }                                        ┆

@@ -9,11 +9,13 @@ var babel = require("babel");
 
 module.exports = (function () {
 
-    var case_description, es6_code;
+    var case_description, es5, es6;
 
     var dictionary = new Dictionary()
         .define('CASE', /(.*)/)
         .define('RESULT', /(\d*)/)
+        .define('LINE', /(\d*)/)
+        .define('COL', /(\d*)/)
         .define('CODE', /([^\u0000]*)/);
     var library = English.library(dictionary)
 
@@ -21,37 +23,47 @@ module.exports = (function () {
         case_description = s;
     })
 
-    .when("EcmaScript6=$CODE", function (code) {
-        es6_code = code;
+    .when("EcmaScript6 at $LINE:$COL = $CODE", function (line, column, code) {
+        es6 = {
+            code: code,
+            line: line,
+            column: column
+        };
     })
 
-    .then("EcmaScript5=$CODE", function (es5_code) {
+    .then("EcmaScript5 at $LINE:$COL = $CODE", function (line, column, code) {
+
+        es5 = {
+            code: code,
+            line: line,
+            column: column
+        };
 
         var actual_es5_code, expected_es5_code;
 
         try {
-            actual_es5_code = babel.transform(es6_code, {
+            actual_es5_code = babel.transform(es6.code, {
                 filename: case_description,
                 compact: true,
                 optional: ["es7.asyncFunctions"],
                 plugins: ["../src/babel-plugin-async2cbn:before"]
             }).code.replace(/^"use strict";\s*/, '');
         } catch (e) {
-            debugger;
-            console.error(es6_code);
-            throw e;
+            console.error('Error parsing EcmaScript6');
+            console.error(es6.code);
+            throw new Error(e.message + ' (' + (parseInt(e.loc.line) + parseInt(es5.line) - 1) + ':' + (parseInt(e.loc.column) + parseInt(es5.column) - 1) + ')');
         }
         try {
-            expected_es5_code = babel.transform(es5_code, {
+            expected_es5_code = babel.transform(es5.code, {
                 filename: case_description,
                 compact: true,
                 optional: [],
                 plugins: []
             }).code.replace(/^"use strict";\s*/, '');
         } catch (e) {
-            debugger;
-            console.error(es5_code);
-            throw e;
+            console.error('Error parsing EcmaScript5');
+            console.error(es5.code);
+            throw new Error(e.message + ' (' + (parseInt(e.loc.line) + parseInt(es5.line) - 1) + ':' + (parseInt(e.loc.column) + parseInt(es5.column) - 1) + ')');
         }
 
         if (expected_es5_code != actual_es5_code)
