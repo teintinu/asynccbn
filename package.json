@@ -1,33 +1,34 @@
 {
-    "name": "asynccbn",
-    "description": "ES7 Async to callback (node style)",
-    "version": "0.0.3",
-    "main": "src/es7-async-cbn.js",
-    "scripts": {
-        "test": "node node_modules/mocha/bin/_mocha --reporter dot",
-        "istanbul": "NODE_ENV=test istanbul cover _mocha -- -u exports --reporter spec",
-        "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
-    },
-    "directories": {
-        "test": "tests"
-    },
-    "author": "thr0w",
-    "license": "Apache2",
-    "dependencies": {
-        "babel-core": "^5.6.0"
-    },
-    "devDependencies": {
-        "babel": "^5.6.14",
-        "coveralls": "^2.11.2",
-        "mocha": "^2.2.5",
-        "mocha-lcov-reporter": "0.0.2",
-        "yadda": "https://github.com/thr0w/yadda/tarball/master"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/thr0w/asynccbn.git"
-    },
-    "keywords": [
+  "name": "asynccbn",
+  "description": "ES7 Async to callback (node style)",
+  "version": "0.0.3",
+  "main": "src/es7-async-cbn.js",
+  "scripts": {
+    "test": "node node_modules/mocha/bin/_mocha --reporter dot",
+    "istanbul": "NODE_ENV=test istanbul cover _mocha -- -u exports --reporter spec",
+    "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
+  },
+  "directories": {
+    "test": "tests"
+  },
+  "author": "thr0w",
+  "license": "Apache2",
+  "dependencies": {
+    "babel-core": "^5.6.0"
+  },
+  "devDependencies": {
+    "babel": "^5.6.14",
+    "coveralls": "^2.11.2",
+    "istanbul": "^0.3.17",
+    "mocha": "^2.2.5",
+    "mocha-lcov-reporter": "0.0.2",
+    "yadda": "https://github.com/thr0w/yadda/tarball/master"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thr0w/asynccbn.git"
+  },
+  "keywords": [
     "ES7",
     "EcmaScript7",
     "async",
@@ -35,8 +36,8 @@
     "callback",
     "babel-plugin"
   ],
-    "bugs": {
-        "url": "https://github.com/thr0w/asynccbn/issues"
-    },
-    "homepage": "https://github.com/thr0w/asynccbn"
+  "bugs": {
+    "url": "https://github.com/thr0w/asynccbn/issues"
+  },
+  "homepage": "https://github.com/thr0w/asynccbn"
 }
