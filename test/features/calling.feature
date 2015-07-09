@@ -5,7 +5,7 @@ Scenario: Calling [case]
    Given I need to transpile [case]
     When EcmaScript6 at [EcmaScript6.start.line]:[EcmaScript6.start.column] = [EcmaScript6] 
     Then EcmaScript5 at [EcmaScript5.start.line]:[EcmaScript5.start.column] = [EcmaScript5] 
-#     And eval fn equals to [result]
+     And eval fn equals to [result]
 
 Examples:
   case:ID          ┆ result  ┆ EcmaScript6:LOC                         ┆ EcmaScript5:LOC
@@ -60,17 +60,40 @@ Examples:
                    ┆         ┆ }                                       ┆   });
                    ┆         ┆                                         ┆ }
 
+
+  var + return     ┆    5    ┆ async function fn() {                   ┆ function fn(callback) {
+    await twice    ┆         ┆   var res = await divide(4,2)+          ┆   divide(4, 2, function(err$, res$1) {
+                   ┆         ┆             await divide(6,2);          ┆     if (err$) return callback(err$);
+                   ┆         ┆   return res;                           ┆     divide(6, 2, function(err$, res$2) {
+                   ┆         ┆ }                                       ┆       if (err$) return callback(err$);
+                   ┆         ┆                                         ┆       var res=res$1+res$2;
+                   ┆         ┆                                         ┆       callback(null, res);
+                   ┆         ┆                                         ┆     });
+                   ┆         ┆                                         ┆   });
+                   ┆         ┆                                         ┆ }
+
   var without      ┆ -       ┆ async function fn() {                   ┆ function fn(callback) {
     return         ┆         ┆   var res = await divide(6,2);          ┆   divide(6, 2, function(err$, res) {
                    ┆         ┆ }                                       ┆     callback(err$);
                    ┆         ┆                                         ┆   });
                    ┆         ┆                                         ┆ }
 
-  vars + return    ┆    2    ┆ async function fn() {                   ┆ function fn(callback) {
+  vars + return    ┆    5    ┆ async function fn() {                   ┆ function fn(callback) {
                    ┆         ┆   var x=1,res = await divide(8,2);      ┆   divide(8, 2, function(err$, res) {
-                   ┆         ┆   return res+x;                         ┆     if (err$) return callback(err$);
+   x is no away    ┆         ┆   return res+x;                         ┆     if (err$) return callback(err$);
                    ┆         ┆ }                                       ┆     var x=1;
                    ┆         ┆                                         ┆     callback(null, res+x);
+                   ┆         ┆                                         ┆   });
+                   ┆         ┆                                         ┆ }
+
+
+  vars + return    ┆    7    ┆ async function fn() {                   ┆ function fn(callback) {
+    await twice    ┆         ┆   var a = await divide(12,3),           ┆   divide(12, 3, function(err$, a) {
+                   ┆         ┆       b = await divide(12,4);           ┆     if (err$) return callback(err$);
+                   ┆         ┆   return a + b;                         ┆     divide(12, 4, function(err$, b) {
+                   ┆         ┆ }                                       ┆       if (err$) return callback(err$);
+                   ┆         ┆                                         ┆       callback(null, a + b);
+                   ┆         ┆                                         ┆     });
                    ┆         ┆                                         ┆   });
                    ┆         ┆                                         ┆ }
 
@@ -82,7 +105,7 @@ Examples:
                    ┆         ┆                                         ┆   });
                    ┆         ┆                                         ┆ }
 
-  var + return     ┆    2    ┆ async function fn() {                   ┆ function fn(callback) {
+  var + return     ┆    7    ┆ async function fn() {                   ┆ function fn(callback) {
      expr          ┆         ┆   var res = await divide(12,2)+1;       ┆   divide(12, 2, function(err$, res$1) {
                    ┆         ┆   return res;                           ┆     if(err$) return callback(err$);
                    ┆         ┆ }                                       ┆     var res= res$1+1;
@@ -90,7 +113,7 @@ Examples:
                    ┆         ┆                                         ┆   });
                    ┆         ┆                                         ┆ }
 
-  var without      ┆    2    ┆ async function fn() {                   ┆ function fn(callback) {
+  var without      ┆    -    ┆ async function fn() {                   ┆ function fn(callback) {
      return expr   ┆         ┆   var res = await divide(14,2)+1;       ┆   divide(14, 2, function(err$, res$1) {
                    ┆         ┆ }                                       ┆     if(err$) return callback(err$);
                    ┆         ┆                                         ┆     var res= res$1+1;

@@ -1,4 +1,4 @@
-function divide(a, b, callback) {
+function divideWithTimeout(a, b, callback) {
     setTimeout(function () {
         if (b == 0)
             callback("Can't divide " + a + " by zero");
@@ -6,4 +6,11 @@ function divide(a, b, callback) {
     }, 0);
 }
 
-module.exports.divide = divide;
+function divideWithoutTimeout(a, b, callback) {
+    if (b == 0)
+        callback("Can't divide " + a + " by zero");
+    callback(null, a / b);
+}
+
+module.exports.divideWithTimeout = divideWithTimeout;
+module.exports.divideWithoutTimeout = divideWithoutTimeout;

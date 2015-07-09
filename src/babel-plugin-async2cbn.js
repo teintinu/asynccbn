@@ -10,7 +10,7 @@ module.exports = function (ref) {
                     delete node.__awaits;
                     return async2cbn.visitorFunctionDeclaration(node, ref.types, awaits, function (node, msg) {
                         //TODO dont use this
-                        _this.errorWithNode(msg);
+                        throw _this.errorWithNode(msg);
                     });
                 }
             },

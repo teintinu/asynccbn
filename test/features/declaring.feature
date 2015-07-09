@@ -10,8 +10,7 @@ Scenario: Declaring [case]
 Examples:
   case:ID          ┆ EcmaScript6:LOC                          ┆ EcmaScript5:LOC
 
-@only
-  async function   ┆ async function divide(a,b)              ┆ function divide(a, b, callback) {
+  async function   ┆ async function divide(a,b)               ┆ function divide(a, b, callback) {
                    ┆ {                                        ┆   callback(null, a / b);
                    ┆   return a/b;                            ┆ }
                    ┆ }                                        ┆
