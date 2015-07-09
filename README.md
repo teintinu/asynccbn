@@ -1,6 +1,11 @@
 # asynccbn 
 Babel Plugin to transpile EcmaScript7 async function transpiled into callbacks.
 
+[![Build Status](https://travis-ci.org/thr0w/asynccbn.png)](https://travis-ci.org/thr0w/asynccbn) [![Dependencies](https://david-dm.org/thr0w/asynccbn.svg)](https://david-dm.org/thr0w/asynccbn) [![Coverage Status](https://img.shields.io/coveralls/thr0w/asynccbn.svg)](https://coveralls.io/r/thr0w/asynccbn?branch=master)
+
+[![NPM](https://nodei.co/npm/asynccbn.png?downloads=true)](https://nodei.co/npm/asynccbn/)
+
+
 > still working, carefull in production enviroments
 
 

@@ -15,6 +15,10 @@ Examples:
                    ┆   return a/b;                            ┆ }
                    ┆ }                                        ┆
 
+  sync function    ┆ function divide(a,b)                     ┆ function divide(a, b) {
+                   ┆ {                                        ┆   return a/b;
+                   ┆   return a/b;                            ┆ }
+                   ┆ }                                        ┆
 
   async void       ┆ async function log(m)                    ┆ function log(m, callback) {
     function       ┆ {                                        ┆   console.log(m);
