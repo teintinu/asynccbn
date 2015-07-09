@@ -1,0 +1,37 @@
+# asynccbn 
+> still working, carefull in production enviroments
+EcmaScript7 async function transpiled to callbacks:
+
+## sample 1: defining an async function
+input:
+```javascript
+  async function divide(a,b)
+  {                         
+    return a/b;
+  }            
+```
+output:
+```javascript
+  function divide(a, b, callback) {
+    callback(null, a / b);
+  }
+  
+```
+
+## sample 2: invoking async function
+input:
+```javascript
+  async function fn() { 
+    return await divide(8,2) + await divide(10,2);
+  }
+```
+output:
+```javascript
+ divide(8, 2, function(err$, res$1) {
+   if (err$) return callback(err$);
+   divide(10, 2, function(err$, res$2) {
+     if (err$) return callback(err$);
+     callback(null, res$1+res$2);
+   });
+ });  
+```
