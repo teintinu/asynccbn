@@ -3,7 +3,7 @@
 "use strict";
 
 var Yadda = require('yadda');
-Yadda.plugins.mocha.StepLevelPlugin.init();
+Yadda.plugins.mocha.ScenarioLevelPlugin.init();
 
 new Yadda.FeatureFileSearch(__dirname + '/features').each(function (file) {
     featureFile(file, function (feature) {
@@ -12,7 +12,8 @@ new Yadda.FeatureFileSearch(__dirname + '/features').each(function (file) {
         var yadda = Yadda.createInstance(library);
 
         scenarios(feature.scenarios, function (scenario) {
-            steps(scenario.steps, function (step) {
+            scenario.steps.forEach(function (step) {
+                //steps(scenario.steps, function (step) {
                 yadda.run(step);
             });
         });

@@ -9,6 +9,7 @@ Scenario: reporting await [case]
 Examples:
   case:ID            ┆ EcmaScript6:LOC                         ┆ Error
 
+----------------------------------------------------------------------------------------------------------------------
   in consequent      ┆ async function fn() {                   ┆ else is mandatory when await used in consequent block
   without else       ┆   if (!math)                            ┆  
                      ┆     return await divide(9,3);           ┆ 

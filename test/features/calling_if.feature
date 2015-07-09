@@ -9,6 +9,7 @@ Scenario: Calling with if and await [case]
 
 Examples:
   case:ID          ┆ result  ┆ EcmaScript6:LOC                         ┆ EcmaScript5:LOC
+----------------------------------------------------------------------------------------------------------------------
 
   after            ┆ 8       ┆ async function fn() {                   ┆ function fn(callback) {
                    ┆         ┆    var r=await divide(16,2);            ┆   divide(16, 2, function(err$, r) {
@@ -20,6 +21,7 @@ Examples:
                    ┆         ┆                                         ┆   });
                    ┆         ┆                                         ┆ }                   
 
+----------------------------------------------------------------------------------------------------------------------
   in test          ┆ 9       ┆ async function fn() {                   ┆ function fn(callback) {
                    ┆         ┆    if (await divide(18,2)==9)           ┆   divide(18, 2, function(err$, res$1) {
                    ┆         ┆      return 9;                          ┆     if(err$) return callback(err$);
@@ -30,6 +32,7 @@ Examples:
                    ┆         ┆                                         ┆   });
                    ┆         ┆                                         ┆ }                                      
 
+----------------------------------------------------------------------------------------------------------------------
   in consequent    ┆ 3       ┆ async function fn() {                   ┆ function fn(callback) {
     with else      ┆         ┆   if (divide)                           ┆   if (divide)
                    ┆         ┆     return await divide(9,3);           ┆      divide(9, 3, callback);
@@ -37,6 +40,7 @@ Examples:
                    ┆         ┆     throw "error";                      ┆     return callback("error"); 
                    ┆         ┆ }                                       ┆ }
 
+----------------------------------------------------------------------------------------------------------------------
   in consequent    ┆ 42      ┆ async function fn() {                   ┆ function fn(callback) {
     await twice    ┆         ┆   if (divide)                           ┆   if (divide)
                    ┆         ┆     return await divide(27,3)+          ┆      divide(27, 3, function(err$, res$1) {
@@ -52,6 +56,7 @@ Examples:
 
 ###
 
+----------------------------------------------------------------------------------------------------------------------
   in consequent    ┆ -       ┆ async function fn() {                   ┆ function fn(callback) {
     block          ┆         ┆    var r=await divide(16,2);            ┆   divide(16, 2, function(err$, r) {
    2 await                ┆         ┆    if (r==8)                            ┆     if(err$) return callback(err$);

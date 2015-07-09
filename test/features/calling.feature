@@ -9,7 +9,7 @@ Scenario: Calling [case]
 
 Examples:
   case:ID          ┆ result  ┆ EcmaScript6:LOC                         ┆ EcmaScript5:LOC
-
+----------------------------------------------------------------------------------------------------------------------
 
   just call        ┆ -       ┆ async function fn() {                   ┆ function fn(callback) {
                    ┆         ┆    await divide(2,2);                   ┆   divide(2, 2, function(err$, res$1) {
@@ -17,6 +17,7 @@ Examples:
                    ┆         ┆                                         ┆   });
                    ┆         ┆                                         ┆ }
 
+----------------------------------------------------------------------------------------------------------------------
   call 2 times     ┆ -       ┆ async function fn() {                   ┆ function fn(callback) {
                    ┆         ┆    await divide(2,2);                   ┆   divide(2, 2, function(err$, res$1) {
                    ┆         ┆    await divide(2,2);                   ┆     if (err$) return callback(err$);
@@ -26,10 +27,12 @@ Examples:
                    ┆         ┆                                         ┆   });
                    ┆         ┆                                         ┆ }
 
+----------------------------------------------------------------------------------------------------------------------
   just a return    ┆    1    ┆ async function fn() {                   ┆ function fn(callback) {
                    ┆         ┆   return await divide(2,2);             ┆   divide(2, 2, callback);
                    ┆         ┆ }                                       ┆ }
 
+----------------------------------------------------------------------------------------------------------------------
   return binary    ┆   11    ┆ async function fn() {                   ┆ function fn(callback) {
     expression     ┆         ┆   return await divide(2,2) + 10;        ┆   divide(2, 2, function(err$, res$1) {
     with await     ┆         ┆ }                                       ┆     if(err$)
@@ -38,6 +41,7 @@ Examples:
                    ┆         ┆                                         ┆   });
                    ┆         ┆                                         ┆ }
 
+----------------------------------------------------------------------------------------------------------------------
   call 2 times     ┆ 9       ┆ async function fn() {                   ┆ function fn(callback) {
      expression    ┆         ┆   return await divide(8,2) +            ┆   divide(8, 2, function(err$, res$1) {
                    ┆         ┆     await divide(10,2);                 ┆     if (err$) return callback(err$);
@@ -48,6 +52,7 @@ Examples:
                    ┆         ┆                                         ┆   });
                    ┆         ┆                                         ┆ }
 
+----------------------------------------------------------------------------------------------------------------------
   return unary     ┆  false  ┆ async function fn() {                   ┆ function fn(callback) {
     expression     ┆         ┆   return !await divide(2,2);            ┆   divide(2, 2, function(err$, res$1) {
     with await     ┆         ┆ }                                       ┆     if(err$)
@@ -56,6 +61,7 @@ Examples:
                    ┆         ┆                                         ┆   });
                    ┆         ┆                                         ┆ }
 
+----------------------------------------------------------------------------------------------------------------------
   return call      ┆    1    ┆ async function fn() {                   ┆ function fn(callback) {
     expression     ┆         ┆   return Math.round(await divide(2,2)); ┆   divide(2, 2, function(err$, res$1) {
     with await     ┆         ┆ }                                       ┆     if(err$)
@@ -64,6 +70,7 @@ Examples:
                    ┆         ┆                                         ┆   });
                    ┆         ┆                                         ┆ }
 
+----------------------------------------------------------------------------------------------------------------------
   var + return     ┆    2    ┆ async function fn() {                   ┆ function fn(callback) {
                    ┆         ┆   var res = await divide(4,2);          ┆   divide(4, 2, function(err$, res) {
                    ┆         ┆   return res;                           ┆     callback(err$, res);
@@ -71,6 +78,7 @@ Examples:
                    ┆         ┆                                         ┆ }
 
 
+----------------------------------------------------------------------------------------------------------------------
   var + return     ┆    5    ┆ async function fn() {                   ┆ function fn(callback) {
     await twice    ┆         ┆   var res = await divide(4,2)+          ┆   divide(4, 2, function(err$, res$1) {
                    ┆         ┆             await divide(6,2);          ┆     if (err$) return callback(err$);
@@ -82,12 +90,14 @@ Examples:
                    ┆         ┆                                         ┆   });
                    ┆         ┆                                         ┆ }
 
+----------------------------------------------------------------------------------------------------------------------
   var without      ┆ -       ┆ async function fn() {                   ┆ function fn(callback) {
     return         ┆         ┆   var res = await divide(6,2);          ┆   divide(6, 2, function(err$, res) {
                    ┆         ┆ }                                       ┆     callback(err$);
                    ┆         ┆                                         ┆   });
                    ┆         ┆                                         ┆ }
 
+----------------------------------------------------------------------------------------------------------------------
   vars + return    ┆    5    ┆ async function fn() {                   ┆ function fn(callback) {
                    ┆         ┆   var x=1,res = await divide(8,2);      ┆   divide(8, 2, function(err$, res) {
    x is no away    ┆         ┆   return res+x;                         ┆     if (err$) return callback(err$);
@@ -96,7 +106,7 @@ Examples:
                    ┆         ┆                                         ┆   });
                    ┆         ┆                                         ┆ }
 
-
+----------------------------------------------------------------------------------------------------------------------
   vars + return    ┆    7    ┆ async function fn() {                   ┆ function fn(callback) {
     await twice    ┆         ┆   var a = await divide(12,3),           ┆   divide(12, 3, function(err$, a) {
                    ┆         ┆       b = await divide(12,4);           ┆     if (err$) return callback(err$);
@@ -107,6 +117,21 @@ Examples:
                    ┆         ┆                                         ┆   });
                    ┆         ┆                                         ┆ }
 
+----------------------------------------------------------------------------------------------------------------------
+  assign+return    ┆   10    ┆ async function fn() {                   ┆ function fn(callback) {
+    await twice    ┆         ┆   var a,b;                              ┆   var a,b;
+                   ┆         ┆   a = await divide(18,3);               ┆   divide(18, 3, function(err$, res$1) {
+                   ┆         ┆   b = await divide(16,4);               ┆     if (err$) return callback(err$);
+                   ┆         ┆   return a + b;                         ┆     a = res$1;
+                   ┆         ┆ }                                       ┆     divide(16, 4, function(err$, res$2) {
+                   ┆         ┆                                         ┆       if (err$) return callback(err$);
+                   ┆         ┆                                         ┆       b = res$2;
+                   ┆         ┆                                         ┆       callback(null, a + b);
+                   ┆         ┆                                         ┆     });
+                   ┆         ┆                                         ┆   });
+                   ┆         ┆                                         ┆ }                   
+
+----------------------------------------------------------------------------------------------------------------------
   vars without     ┆ -       ┆ async function fn() {                   ┆ function fn(callback) {
     return         ┆         ┆   var x=2,res = await divide(10,2);     ┆   divide(10, 2, function(err$, res) {
                    ┆         ┆ }                                       ┆     if(err$) return callback(err$);
@@ -115,6 +140,7 @@ Examples:
                    ┆         ┆                                         ┆   });
                    ┆         ┆                                         ┆ }
 
+----------------------------------------------------------------------------------------------------------------------
   var + return     ┆    7    ┆ async function fn() {                   ┆ function fn(callback) {
      expr          ┆         ┆   var res = await divide(12,2)+1;       ┆   divide(12, 2, function(err$, res$1) {
                    ┆         ┆   return res;                           ┆     if(err$) return callback(err$);
@@ -123,6 +149,7 @@ Examples:
                    ┆         ┆                                         ┆   });
                    ┆         ┆                                         ┆ }
 
+----------------------------------------------------------------------------------------------------------------------
   var without      ┆    -    ┆ async function fn() {                   ┆ function fn(callback) {
      return expr   ┆         ┆   var res = await divide(14,2)+1;       ┆   divide(14, 2, function(err$, res$1) {
                    ┆         ┆ }                                       ┆     if(err$) return callback(err$);
