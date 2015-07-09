@@ -15,3 +15,21 @@ Examples:
                      ┆     return await divide(9,3);           ┆ 
                      ┆ }                                       ┆ 
                      
+----------------------------------------------------------------------------------------------------------------------
+  dead code          ┆ async function fn() {                   ┆ Dead code                                                
+                     ┆   return 1;                             ┆  
+                     ┆   var x=1;                              ┆ 
+                     ┆ }                                       ┆ 
+                     
+----------------------------------------------------------------------------------------------------------------------
+  throws await       ┆ async function fn() {                   ┆ Can't throw await expression                            
+                     ┆   throw await divide(2,1);              ┆  
+                     ┆ }                                       ┆ 
+                     ┆                                         ┆ 
+                     
+----------------------------------------------------------------------------------------------------------------------
+  throws await       ┆ async function fn() {                   ┆ Can't throw await expression                            
+    in expression    ┆   throw await divide(2,1)+1;            ┆  
+                     ┆ }                                       ┆ 
+                     ┆                                         ┆ 
+                     

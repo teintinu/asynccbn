@@ -4,7 +4,7 @@
     "version": "0.0.3",
     "main": "src/es7-async-cbn.js",
     "scripts": {
-        "test": "node node_modules/mocha/bin/_mocha --reporter min",
+        "test": "node node_modules/mocha/bin/_mocha --reporter dot",
         "istanbul": "NODE_ENV=test istanbul cover _mocha -- -u exports --reporter spec",
         "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
     },

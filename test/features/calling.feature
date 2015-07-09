@@ -158,3 +158,12 @@ Examples:
                    ┆         ┆                                         ┆   });
                    ┆         ┆                                         ┆ }
 
+----------------------------------------------------------------------------------------------------------------------
+  call await       ┆    -    ┆ async function fn() {                   ┆ function fn(callback) {
+                   ┆         ┆   parseInt(await divide(14,2));         ┆   divide(14, 2, function(err$, res$1) {
+                   ┆         ┆ }                                       ┆     if(err$) return callback(err$);
+                   ┆         ┆                                         ┆     parseInt(res$1);
+                   ┆         ┆                                         ┆     callback();
+                   ┆         ┆                                         ┆   });
+                   ┆         ┆                                         ┆ }
+
