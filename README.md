@@ -2,6 +2,13 @@
 > still working, carefull in production enviroments
 EcmaScript7 async function transpiled to callbacks:
 
+## install
+npm install asynccbn
+
+## usage 
+
+Use it as a [babeljs plugin](https://babeljs.io/docs/advanced/plugins/)
+
 ## sample 1: defining an async function
 input:
 ```javascript
