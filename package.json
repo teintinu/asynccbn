@@ -5,7 +5,7 @@
     "main": "src/es7-async-cbn.js",
     "scripts": {
         "test": "node node_modules/mocha/bin/_mocha --reporter spec",
-        "istanbul": "NODE_ENV=test istanbul cover _mocha -- -u exports --reporter spec",
+        "istanbul": "NODE_ENV=test istanbul cover _mocha -- -u exports --reporter spec"
     },
     "directories": {
         "test": "tests"

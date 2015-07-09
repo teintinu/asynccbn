@@ -5,9 +5,11 @@ Babel Plugin to transpile EcmaScript7 async function transpiled into callbacks.
 
 [![NPM](https://nodei.co/npm/asynccbn.png?downloads=true)](https://nodei.co/npm/asynccbn/)
 
-
 > still working, carefull in production enviroments
 
+## Why
+
+Promises and generators need more memory and are slower then callbacks.
 
 ## install
 npm install asynccbn
