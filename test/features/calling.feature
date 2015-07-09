@@ -38,6 +38,16 @@ Examples:
                    ┆         ┆                                         ┆   });
                    ┆         ┆                                         ┆ }
 
+  call 2 times     ┆ 9       ┆ async function fn() {                   ┆ function fn(callback) {
+     expression    ┆         ┆   return await divide(8,2) +            ┆   divide(8, 2, function(err$, res$1) {
+                   ┆         ┆     await divide(10,2);                 ┆     if (err$) return callback(err$);
+                   ┆         ┆ }                                       ┆     divide(10, 2, function(err$, res$2) {
+                   ┆         ┆                                         ┆       if (err$) return callback(err$);
+                   ┆         ┆                                         ┆       callback(null, res$1+res$2);
+                   ┆         ┆                                         ┆     });
+                   ┆         ┆                                         ┆   });
+                   ┆         ┆                                         ┆ }
+
   return unary     ┆  false  ┆ async function fn() {                   ┆ function fn(callback) {
     expression     ┆         ┆   return !await divide(2,2);            ┆   divide(2, 2, function(err$, res$1) {
     with await     ┆         ┆ }                                       ┆     if(err$)
