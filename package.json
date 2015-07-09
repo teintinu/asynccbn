@@ -25,10 +25,12 @@
         "url": "https://github.com/thr0w/asynccbn.git"
     },
     "keywords": [
-    "ES7",
-    "async",
-    "await",
-    "callback", "babel-plugin"
+        "ES7",
+        "EcmaScript7",
+        "async",
+        "await",
+        "callback",
+        "babel-plugin"
     ],
     "bugs": {
         "url": "https://github.com/thr0w/asynccbn/issues"
