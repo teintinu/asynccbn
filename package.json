@@ -4,7 +4,6 @@
     "version": "0.0.2",
     "main": "src/es7-async-cbn.js",
     "scripts": {
-        "preinstall": "npm --loglevel error link yadda",
         "test": "node node_modules/mocha/bin/_mocha --reporter dot"
     },
     "directories": {
