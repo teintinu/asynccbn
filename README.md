@@ -1,6 +1,8 @@
 # asynccbn 
+Babel Plugin to transpile EcmaScript7 async function transpiled into callbacks.
+
 > still working, carefull in production enviroments
-EcmaScript7 async function transpiled to callbacks:
+
 
 ## install
 npm install asynccbn
