@@ -1,3 +1,11 @@
+/*
+
+Part of that code is inspired in
+- github.com/facebook/regenerator
+- github.com/MatAtBread/nodent
+
+*/
+
 function visitorFunctionDeclaration(node, types, awaits, throwWithNode) {
     if (node.async) {
         node.async = false;
@@ -88,10 +96,13 @@ function visitEachRowFunction(fnbody, types, awaits, throwWithNode) {
             return visitIfStatement(stmt);
 
         case 'WhileStatement':
+            throw new Error("TODO");
         case 'ForStatement':
+            throw new Error("TODO");
         case 'TryStatement':
+            throw new Error("TODO");
         case 'SwitchStatement':
-            throw "TODO";
+            throw new Error("TODO");
         default:
             if (getAwaitInfo(stmt))
                 throwWithNode(stmt.node, "Unsuported combination with await");
@@ -218,9 +229,9 @@ function visitEachRowFunction(fnbody, types, awaits, throwWithNode) {
             if (stmtIf.alternate)
                 stmtIf.alternate = await_info.alternate.part_stmt;
         } else if (await_info.consequent.has_await && await_info.alternate.has_await)
-            throw "TODO";
+            throw new Error("TODO");
         else if (await_info.consequent.has_await && await_info.alternate.has_await)
-            throw "TODO";
+            throw new Error("TODO");
         else {
             stmtIf.consequent = await_info.consequent.part_stmt;
             if (stmtIf.alternate)
@@ -264,7 +275,7 @@ function visitEachRowFunction(fnbody, types, awaits, throwWithNode) {
                 if (r)
                     throw "TODO await in test";
                 if (!await_info.ret_or_throw)
-                    throw "TODO";
+                    throw new Error("TODO");
                 r = {
                     stmt: ifStmt
                 };
@@ -272,7 +283,7 @@ function visitEachRowFunction(fnbody, types, awaits, throwWithNode) {
                 if (r)
                     throw "TODO await in test";
                 if (!await_info.ret_or_throw)
-                    throw "TODO";
+                    throw new Error("TODO");
                 r = {
                     stmt: ifStmt
                 };
