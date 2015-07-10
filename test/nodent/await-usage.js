@@ -1,5 +1,6 @@
 
 async function test() {
+    await sleep(0);
 	return "t" ;
 }
 

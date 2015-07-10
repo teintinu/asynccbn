@@ -13,7 +13,7 @@ var sample = require('./sample');
 
 module.exports = (function () {
 
-    var case_description, es5, es6;
+    var case_description, es5, es7;
 
     var dictionary = new Dictionary()
         .define('CASE', /(.*)/)
@@ -30,8 +30,8 @@ module.exports = (function () {
         next();
     })
 
-    .when("EcmaScript6 at $LINE:$COL = $CODE", function (line, column, code, next) {
-        es6 = {
+    .when("EcmaScript7 at $LINE:$COL = $CODE", function (line, column, code, next) {
+        es7 = {
             code: code,
             line: line,
             column: column
@@ -51,17 +51,17 @@ module.exports = (function () {
             var actual_es5_code, expected_es5_code;
 
             try {
-                actual_es5_code = babel.transform(es6.code, {
+                actual_es5_code = babel.transform(es7.code, {
                     filename: case_description,
                     compact: true,
                     optional: ["es7.asyncFunctions"],
                     plugins: ["../src/babel-plugin-async2cbn:before"]
                 }).code.replace(/^"use strict";\s*/, '');
             } catch (e) {
-                console.error('Error parsing EcmaScript6');
-                console.error(es6.code);
+                console.error('Error parsing EcmaScript7');
+                console.error(es7.code);
                 if (e.loc)
-                    return next(new Error(e.message + ' (' + (parseInt(e.loc.line) + parseInt(es6.line) - 1) + ':' + (parseInt(e.loc.column) + parseInt(es6.column) - 1) + ')'));
+                    return next(new Error(e.message + ' (' + (parseInt(e.loc.line) + parseInt(es7.line) - 1) + ':' + (parseInt(e.loc.column) + parseInt(es7.column) - 1) + ')'));
                 return next(e);
             }
             try {
@@ -81,7 +81,7 @@ module.exports = (function () {
 
             if (expected_es5_code != actual_es5_code) {
 
-                var msg = ["transpile fail on " + case_description + ' at line ' + es6.line + '\n'];
+                var msg = ["transpile fail on " + case_description + ' at line ' + es7.line + '\n'];
                 var diff = jsdiff.diffChars(actual_es5_code, expected_es5_code);
 
                 diff.forEach(function (part) {
@@ -110,7 +110,7 @@ module.exports = (function () {
             body = body.substr(0, i);
             var fn = new Function('divide, callback', body);
 
-            var fail = "callback was not executed at line " + es6.line;
+            var fail = "callback was not executed at line " + es7.line;
             fn(sample.divideWithoutTimeout,
                 function (err, actual_result) {
                     if (actual_result === undefined)
@@ -120,7 +120,7 @@ module.exports = (function () {
                     if (actual_result == expected_result.trim())
                         fail = false;
                     else
-                        fail = new Error('Expected result=' + expected_result + ' actual=' + actual_result + ' at line ' + es6.line);
+                        fail = new Error('Expected result=' + expected_result + ' actual=' + actual_result + ' at line ' + es7.line);
                 });
             if (fail)
                 return next(fail);
@@ -133,7 +133,7 @@ module.exports = (function () {
                     if (actual_result == expected_result.trim())
                         fail = false;
                     else
-                        return next(new Error('Expected result=' + expected_result + ' actual=' + actual_result + ' at line ' + es6.line));
+                        return next(new Error('Expected result=' + expected_result + ' actual=' + actual_result + ' at line ' + es7.line));
                     next();
                 });
         } catch (e) {
@@ -144,7 +144,7 @@ module.exports = (function () {
     .then("must report $ERROR", function (expected_error, next) {
 
         try {
-            babel.transform(es6.code, {
+            babel.transform(es7.code, {
                 filename: case_description,
                 compact: true,
                 optional: ["es7.asyncFunctions"],

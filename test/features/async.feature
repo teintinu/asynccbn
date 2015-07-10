@@ -3,12 +3,12 @@ Feature: Declaring functions
 Scenario: [case]
 
    Given I need to transpile [case]
-    When EcmaScript6 at [EcmaScript6.start.line]:[EcmaScript6.start.column] = [EcmaScript6] 
+    When EcmaScript7 at [EcmaScript7.start.line]:[EcmaScript7.start.column] = [EcmaScript7] 
     Then EcmaScript5 at [EcmaScript5.start.line]:[EcmaScript5.start.column] = [EcmaScript5] 
 #     And eval fn equals to [result]
 
 Examples:
-  case:ID          ┆ EcmaScript6:LOC                          ┆ EcmaScript5:LOC
+  case:ID          ┆ EcmaScript7:LOC                          ┆ EcmaScript5:LOC
 
 ----------------------------------------------------------------------------------------------------------------------
   async function   ┆ async function divide(a,b)               ┆ function divide(a, b, callback) {

@@ -3,11 +3,11 @@ Feature: Error reporting when wrong use of await
 Scenario: [case]
 
    Given I try to transpile [case]
-    When EcmaScript6 at [EcmaScript6.start.line]:[EcmaScript6.start.column] = [EcmaScript6] 
+    When EcmaScript7 at [EcmaScript7.start.line]:[EcmaScript7.start.column] = [EcmaScript7] 
     Then must report [Error]
 
 Examples:
-  case:ID            ┆ EcmaScript6:LOC                         ┆ Error
+  case:ID            ┆ EcmaScript7:LOC                         ┆ Error
 
 ----------------------------------------------------------------------------------------------------------------------
   in consequent      ┆ async function fn() {                   ┆ else is mandatory when await used in consequent block

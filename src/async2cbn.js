@@ -171,7 +171,6 @@ function visitEachRowFunction(fnbody, types, awaits, throwWithNode) {
     function visitVariableDeclaration(stmtVar) {
         var r;
 
-        debugger;
         stmtVar.declarations = stmtVar.declarations.reduce(
             function (no_await_decls, decl) {
                 var await_info;

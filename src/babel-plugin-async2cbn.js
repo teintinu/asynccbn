@@ -1,9 +1,8 @@
 var async2cbn = require("./async2cbn");
 
 module.exports = function (ref) {
-    return new ref.Plugin("async2cbn", {
-        visitor: {
-            FunctionDeclaration: {
+
+    var functionVisitor={
                 exit: function (node, parent) {
                     var _this = this;
                     var awaits = node.__awaits || [];
@@ -13,7 +12,13 @@ module.exports = function (ref) {
                         throw _this.errorWithNode(msg);
                     });
                 }
-            },
+            };
+
+    return new ref.Plugin("async2cbn", {
+        visitor: {
+            FunctionDeclaration: functionVisitor,
+            FunctionExpression: functionVisitor,
+//TODO            ArrowFunctionExpression: functionVisitor,
             AwaitExpression: function (node, parent) {
                 var paths = [];
                 var _this = this;
