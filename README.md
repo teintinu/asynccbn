@@ -51,3 +51,46 @@ output:
    });
  });  
 ```
+
+
+## sample 3: callback hell
+input:
+```javascript
+async function fn() { 
+  var x=10;                   
+  var a=await divide(2,2);    
+  var y=10;                   
+  var b=await divide(4,2);    
+  var c=await divide(6,2);    
+  var d=await divide(16,2)/2; 
+  var e;                      
+  e=await divide(10,2);       
+  return x+a+b+c+d+e-y;       
+}
+```
+output:
+```javascript
+function fn(callback) {
+  var x=10;
+  divide(2, 2, function(err$, a) {
+    if (err$) return callback(err$);
+    var y=10;
+    divide(4, 2, function(err$, b) {
+      if (err$) return callback(err$);
+      divide(6, 2, function(err$, c) {
+        if (err$) return callback(err$);
+        divide(16, 2, function(err$, res$4) {
+          if (err$) return callback(err$);
+          var d=res$4/2;
+          var e;
+          divide(10, 2, function(err$, res$5) {
+             if (err$) return callback(err$);
+             e=res$5;
+             callback(null, x+a+b+c+d+e-y);
+          });
+        });
+      });
+    });
+  });
+}
+```

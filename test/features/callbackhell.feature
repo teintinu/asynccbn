@@ -47,7 +47,7 @@ Examples:
                    ┆         ┆                                         ┆       });
                    ┆         ┆                                         ┆     });
                    ┆         ┆                                         ┆   });
-                   ┆         ┆  }                                       ┆ }
+                   ┆         ┆  }                                      ┆ }
 
   merged           ┆ 15      ┆ async function fn() {                   ┆ function fn(callback) {
     simple         ┆         ┆    var x=10;                            ┆   var x=10;
