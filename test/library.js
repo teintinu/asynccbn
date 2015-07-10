@@ -6,6 +6,9 @@ var English = Yadda.localisation.English;
 var Dictionary = Yadda.Dictionary;
 var assert = require('assert');
 var babel = require("babel");
+require('colors');
+var jsdiff = require('diff');
+
 var sample = require('./sample');
 
 module.exports = (function () {
@@ -76,13 +79,20 @@ module.exports = (function () {
                 return next(e);
             }
 
-            if (expected_es5_code != actual_es5_code)
-                return next(new Error(
-                       ["transpile fail on " + case_description + ' at line ' + es6.line,
-                       "expected:",
-                       expected_es5_code,
-                       "actual",
-                       actual_es5_code].join('\n')));
+            if (expected_es5_code != actual_es5_code) {
+
+                var msg = ["transpile fail on " + case_description + ' at line ' + es6.line + '\n'];
+                var diff = jsdiff.diffChars(actual_es5_code, expected_es5_code);
+
+                diff.forEach(function (part) {
+                    var color = part.added ? 'cyan' :
+                        part.removed ? 'magenta' : 'gray';
+                    msg.push(part.value[color]);
+                });
+
+                msg.push(' '.black);
+                return next(new Error(msg.join('')));
+            }
             next();
         } catch (e) {
             next(e);

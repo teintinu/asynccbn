@@ -1,6 +1,6 @@
-Feature: declaring async functions
+Feature: Declaring functions
 
-Scenario: Declaring [case]
+Scenario: [case]
 
    Given I need to transpile [case]
     When EcmaScript6 at [EcmaScript6.start.line]:[EcmaScript6.start.column] = [EcmaScript6] 

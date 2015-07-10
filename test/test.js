@@ -12,14 +12,15 @@ new Yadda.FeatureFileSearch(__dirname + '/features').each(function (file) {
         var yadda = Yadda.createInstance(library);
 
         scenarios(feature.scenarios, function (scenario, done) {
-            exec(0);
-            function exec(idx){
-                if (idx>=scenario.steps.length)
-                    done();
+            var idx = -1;
+            exec_next_step();
+
+            function exec_next_step(err) {
+                idx++;
+                if (err || idx >= scenario.steps.length)
+                    done(err);
                 else
-                    yadda.run(scenario.steps[idx], function(){
-                        exec(idx+1);
-                    });
+                    yadda.run(scenario.steps[idx], exec_next_step);
             }
         });
     });

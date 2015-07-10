@@ -214,7 +214,7 @@ function visitEachRowFunction(fnbody, types, awaits, throwWithNode) {
         if (await_info.consequent.has_await && !await_info.alternate.has_await) {
             if (!stmtIf.alternate)
                 throwWithNode(stmtIf, "else is mandatory when await used in consequent block");
-            stmtIf.consequent = visitIfStatementPartWithAwait(stmtIf, await_info.consequent);
+            visitIfStatementPartWithAwait(stmtIf, 'consequent', await_info.consequent);
             if (stmtIf.alternate)
                 stmtIf.alternate = await_info.alternate.part_stmt;
         } else if (await_info.consequent.has_await && await_info.alternate.has_await)
@@ -245,10 +245,11 @@ function visitEachRowFunction(fnbody, types, awaits, throwWithNode) {
                     has_await: false
                 };
             if (part.type == "BlockStatement") {
-                rp = visitBlockStatement(part);
+                rp = visitBlockStatement(part.body);
                 rp.block_mode = true;
                 rp.has_await = !!rp.stmtsAfterAwait;
                 rp.part_stmt = rp.stmtsBeforeAwait;
+                part.body = rp.stmtsBeforeAwait;
             } else {
                 rp = visitStatement(part);
                 rp.block_mode = false;
@@ -258,10 +259,8 @@ function visitEachRowFunction(fnbody, types, awaits, throwWithNode) {
             return rp;
         }
 
-        function visitIfStatementPartWithAwait(ifStmt, await_info) {
-            if (await_info.block_mode)
-                throw "TODO";
-            else {
+        function visitIfStatementPartWithAwait(ifStmt, partname, await_info) {
+            if (await_info.block_mode) {
                 if (r)
                     throw "TODO await in test";
                 if (!await_info.ret_or_throw)
@@ -269,7 +268,15 @@ function visitEachRowFunction(fnbody, types, awaits, throwWithNode) {
                 r = {
                     stmt: ifStmt
                 };
-                return await_info.stmt;
+            } else {
+                if (r)
+                    throw "TODO await in test";
+                if (!await_info.ret_or_throw)
+                    throw "TODO";
+                r = {
+                    stmt: ifStmt
+                };
+                ifStmt[partname] = await_info.stmt;
                 //        if (!await_info.alternate || !await_info.alternate.stmtsAfterAwait) {
                 //            r.stmt = await_info.consequent.stmt;
                 //            stmtIf.consequent = await_info.consequent.afterAwait;
@@ -327,7 +334,7 @@ function visitEachRowFunction(fnbody, types, awaits, throwWithNode) {
                     if (await_info.awaitPath)
                         await_info.call = await_info.awaitPath.node.argument;
                     if (!await_info.call || await_info.call.type != 'CallExpression')
-                        throwWithNode(await_info.awaitPath.node, "AwaitExpression must invoke a funciton");
+                        throwWithNode(await_info.awaitPath.node, "AwaitExpression must invoke a function");
                     return true;
                 }
             })

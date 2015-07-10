@@ -1,6 +1,6 @@
-Feature: error reporting when wrong use of await
+Feature: Error reporting when wrong use of await
 
-Scenario: reporting await [case]
+Scenario: [case]
 
    Given I try to transpile [case]
     When EcmaScript6 at [EcmaScript6.start.line]:[EcmaScript6.start.column] = [EcmaScript6] 
@@ -28,8 +28,15 @@ Examples:
                      ┆                                         ┆ 
                      
 ----------------------------------------------------------------------------------------------------------------------
-  throws await       ┆ async function fn() {                   ┆ Can't throw await expression                            
+  throws await       ┆ async function fn() {                   ┆ Can't throw await expression                           
     in expression    ┆   throw await divide(2,1)+1;            ┆  
                      ┆ }                                       ┆ 
                      ┆                                         ┆ 
                      
+----------------------------------------------------------------------------------------------------------------------
+  await must invoke  ┆ async function fn() {                   ┆ AwaitExpression must invoke a function
+    function         ┆   return await 1;                       ┆  
+                     ┆ }                                       ┆ 
+                     ┆                                         ┆ 
+                     
+

@@ -1,6 +1,6 @@
-Feature: call async functions using await
+Feature: Expressions with await
 
-Scenario: Calling [case]
+Scenario: [case]
 
    Given I need to transpile [case]
     When EcmaScript6 at [EcmaScript6.start.line]:[EcmaScript6.start.column] = [EcmaScript6] 
@@ -76,7 +76,6 @@ Examples:
                    ┆         ┆   return res;                           ┆     callback(err$, res);
                    ┆         ┆ }                                       ┆   });
                    ┆         ┆                                         ┆ }
-
 
 ----------------------------------------------------------------------------------------------------------------------
   var + return     ┆    5    ┆ async function fn() {                   ┆ function fn(callback) {
@@ -164,6 +163,20 @@ Examples:
                    ┆         ┆ }                                       ┆     if(err$) return callback(err$);
                    ┆         ┆                                         ┆     parseInt(res$1);
                    ┆         ┆                                         ┆     callback();
+                   ┆         ┆                                         ┆   });
+                   ┆         ┆                                         ┆ }
+
+----------------------------------------------------------------------------------------------------------------------
+  operator         ┆   16    ┆ async function fn() {                   ┆ function fn(callback) {
+  precedence       ┆         ┆   return await divide(2,2)+             ┆   divide(2, 2, function(err$, res$1) {
+                   ┆         ┆          await divide(6,2)*             ┆     if(err$) return callback(err$);
+                   ┆         ┆          await divide(10,2);            ┆     divide(6, 2, function(err$, res$2) {
+                   ┆         ┆ }                                       ┆       if(err$) return callback(err$);    
+                   ┆         ┆                                         ┆       divide(10, 2, function(err$, res$3) {
+                   ┆         ┆                                         ┆         if(err$) return callback(err$);
+                   ┆         ┆                                         ┆         callback(null, res$1+res$2*res$3);
+                   ┆         ┆                                         ┆       });
+                   ┆         ┆                                         ┆     });
                    ┆         ┆                                         ┆   });
                    ┆         ┆                                         ┆ }
 

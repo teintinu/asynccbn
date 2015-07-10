@@ -1,6 +1,5 @@
-Feature: call async functions using await
-
-Scenario: Calling with if and await [case]
+Feature: if and await
+Scenario: [case]
 
    Given I need to transpile [case]
     When EcmaScript6 at [EcmaScript6.start.line]:[EcmaScript6.start.column] = [EcmaScript6] 
@@ -9,9 +8,9 @@ Scenario: Calling with if and await [case]
 
 Examples:
   case:ID          ┆ result  ┆ EcmaScript6:LOC                         ┆ EcmaScript5:LOC
-----------------------------------------------------------------------------------------------------------------------
 
-  after            ┆ 8       ┆ async function fn() {                   ┆ function fn(callback) {
+----------------------------------------------------------------------------------------------------------------------
+  await after if   ┆ 8       ┆ async function fn() {                   ┆ function fn(callback) {
                    ┆         ┆    var r=await divide(16,2);            ┆   divide(16, 2, function(err$, r) {
                    ┆         ┆    if (r==8)                            ┆     if(err$) return callback(err$);
                    ┆         ┆      return r;                          ┆     if (r==8)
@@ -21,8 +20,20 @@ Examples:
                    ┆         ┆                                         ┆   });
                    ┆         ┆                                         ┆ }                   
 
+@Pending
 ----------------------------------------------------------------------------------------------------------------------
-  in test          ┆ 9       ┆ async function fn() {                   ┆ function fn(callback) {
+  await after if   ┆ 8       ┆ async function fn() {                   ┆ function fn(callback) {
+    with block     ┆         ┆    var r=await divide(16,2);            ┆   divide(16, 2, function(err$, r) {
+                   ┆         ┆    if (r==8)                            ┆     if(err$) return callback(err$);
+                   ┆         ┆      { return r; }                      ┆     if (r==8)
+                   ┆         ┆    else                                 ┆       { callback(null, r) }
+                   ┆         ┆      { throw "error"; }                 ┆     else
+                   ┆         ┆ }                                       ┆       { return callback("error"); }
+                   ┆         ┆                                         ┆   });
+                   ┆         ┆                                         ┆ }                   
+
+----------------------------------------------------------------------------------------------------------------------
+  await in test    ┆ 9       ┆ async function fn() {                   ┆ function fn(callback) {
                    ┆         ┆    if (await divide(18,2)==9)           ┆   divide(18, 2, function(err$, res$1) {
                    ┆         ┆      return 9;                          ┆     if(err$) return callback(err$);
                    ┆         ┆    else                                 ┆     if (res$1==9)
@@ -33,17 +44,17 @@ Examples:
                    ┆         ┆                                         ┆ }                                      
 
 ----------------------------------------------------------------------------------------------------------------------
-  in consequent    ┆ 3       ┆ async function fn() {                   ┆ function fn(callback) {
-    with else      ┆         ┆   if (divide)                           ┆   if (divide)
-                   ┆         ┆     return await divide(9,3);           ┆      divide(9, 3, callback);
+  await in         ┆ 3       ┆ async function fn() {                   ┆ function fn(callback) {
+    consequent     ┆         ┆   if (divide)                           ┆   if (divide)
+    with else      ┆         ┆     return await divide(9,3);           ┆      divide(9, 3, callback);
                    ┆         ┆   else                                  ┆   else    
                    ┆         ┆     throw "error";                      ┆     return callback("error"); 
                    ┆         ┆ }                                       ┆ }
 
 ----------------------------------------------------------------------------------------------------------------------
-  in consequent    ┆ 42      ┆ async function fn() {                   ┆ function fn(callback) {
-    await twice    ┆         ┆   if (divide)                           ┆   if (divide)
-                   ┆         ┆     return await divide(27,3)+          ┆      divide(27, 3, function(err$, res$1) {
+  await in         ┆ 42      ┆ async function fn() {                   ┆ function fn(callback) {
+    consequent     ┆         ┆   if (divide)                           ┆   if (divide)
+    twice          ┆         ┆     return await divide(27,3)+          ┆      divide(27, 3, function(err$, res$1) {
                    ┆         ┆            await divide(66,2);          ┆        if (err$) return callback(err$);
                    ┆         ┆   else                                  ┆        divide(66, 2, function(err$, res$2) {                     
                    ┆         ┆     throw "error";                      ┆          if (err$) return callback(err$);
@@ -54,16 +65,15 @@ Examples:
                    ┆         ┆                                         ┆     return callback("error");
                    ┆         ┆                                         ┆ }
 
-###
-
+@Pending
 ----------------------------------------------------------------------------------------------------------------------
   in consequent    ┆ -       ┆ async function fn() {                   ┆ function fn(callback) {
     block          ┆         ┆    var r=await divide(16,2);            ┆   divide(16, 2, function(err$, r) {
-   2 await                ┆         ┆    if (r==8)                            ┆     if(err$) return callback(err$);
-   alternate                ┆         ┆      return r;                          ┆     if (r==8)
+   2 await         ┆         ┆    if (r==8)                            ┆     if(err$) return callback(err$);
+   alternate       ┆         ┆      return r;                          ┆     if (r==8)
                    ┆         ┆    else                                 ┆       callback(null, r)
                    ┆         ┆      throw "error";                     ┆     else
                    ┆         ┆ }                                       ┆       return callback("error");
                    ┆         ┆                                         ┆   });
                    ┆         ┆                                         ┆ }                                                                            
-###                
+                
